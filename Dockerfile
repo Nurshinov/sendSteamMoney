@@ -4,5 +4,5 @@ COPY go.mod ./
 COPY go.sum .
 RUN go mod download
 COPY . .
-RUN go build -tags musl -o /tg_bot
-CMD ["/tg_bot"]
+RUN go build -o /qiwi_web
+CMD ["/qiwi_web"]
