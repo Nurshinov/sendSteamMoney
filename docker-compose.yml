@@ -1,0 +1,15 @@
+---
+version: '3'
+
+services:
+  tg_bot:
+    image: alimzhannurshinov/qiwi_web:0.0.1
+    container_name: qiwi_web
+    environment:
+      PUBLIC_KEY: ${PUBLIC_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+      QIWI_WALLET_API: ${QIWI_WALLET_API}
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_HOST}
+      DB_PASS: ${DB_PASS}
