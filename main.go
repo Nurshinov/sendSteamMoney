@@ -54,22 +54,16 @@ func checkPayments(bills chan string) {
 			log.Printf("[INFO] Запуск проверки платежа: %s", billId)
 			status := qiwi.CheckPaymentStatus(billId, time.Now())
 			if status.Status.Value == "PAID" {
-				transactId := database.AddNewProduct(status.Comment, status.Amount.Value)
+				log.Println("[INFO] Запускаем процесс перевода денежных средств")
+				transactId := database.AddNewProduct(status.Comment, status.Amount.Value, "Перевод между счетами")
 				floatSum, _ := strconv.ParseFloat(status.Amount.Value, 32)
 				amount := qiwi.GetCurrencySum(floatSum)
-				p2pResp, err := qiwi.P2P(amount, transactId)
-				if err != nil {
-					log.Printf("[ERROR] Ошибка отправки запроса на перевод между счетам для аккаунта: %s", status.Comment)
-				}
-				log.Printf("[INFO] Статус перевода между валютой аккаунта %s: %s", status.Comment, p2pResp.Status)
+				log.Printf("[INFO] Сумма перевода для billID: %s = %f", bills, amount)
+				qiwi.P2P(amount, transactId)
 				time.Sleep(30 * time.Second)
-				resp, total := qiwi.SendMoneyToSteam(amount, transactId, status.Comment)
-				if total != nil {
-					log.Println(total.Error())
-				}
-				log.Printf("[INFO] Статус перевода на steam кошелек аккаунта %s: %s", status.Comment, resp.Status)
+				transactId = database.AddNewProduct(status.Comment, status.Amount.Value, "Перевод денег на аккаунт в стиме")
+				qiwi.SendMoneyToSteam(amount, transactId, status.Comment)
 			}
-			log.Printf("[INFO] Платеж %s имеет статус %s", billId, status.Status.Value)
 		}()
 	}
 }

@@ -59,6 +59,7 @@ func CheckPaymentStatus(bill string, evT time.Time) *BillStatus {
 			log.Println(err.Error())
 		}
 		err = json.NewDecoder(resp.Body).Decode(&t)
+		log.Printf("[INFO] Платеж %s имеет статус %s", bill, t.Status.Value)
 		if t.Status.Value == "PAID" {
 			break
 		}
@@ -90,7 +91,7 @@ func GetCurrencySum(sum float64) float64 {
 }
 
 // Функция перевода между счетами счетом в рублях и счетом в тенге
-func P2P(amount float64, id string) (*http.Response, error) {
+func P2P(amount float64, id string) {
 	client := http.Client{}
 	body := fmt.Sprintf(
 		`{
@@ -111,10 +112,16 @@ func P2P(amount float64, id string) (*http.Response, error) {
 	req.Header.Add("Authorization", os.Getenv("QIWI_WALLET_API"))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
-	return resp, err
+	if err != nil {
+		log.Printf("[ERROR] Ошибка отправки запроса на перевод между счетами: %s", err.Error())
+	}
+	log.Printf("[INFO] Статус перевода между валютой : %s", resp.Status)
+	if resp.Status != "200" {
+		return
+	}
 }
 
-func SendMoneyToSteam(amount float64, id string, account string) (*http.Response, error) {
+func SendMoneyToSteam(amount float64, id string, account string) {
 	client := http.Client{}
 	body := fmt.Sprintf(`{
 		"id": "%s",
@@ -136,13 +143,17 @@ func SendMoneyToSteam(amount float64, id string, account string) (*http.Response
 	req.Header.Add("Authorization", os.Getenv("QIWI_WALLET_API"))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
-	return resp, err
+	if err != nil {
+		log.Println(err.Error())
+	}
+	log.Printf("[INFO] Платеж %s имеет статус %s", id, resp.Status)
+
 }
 
 func GetPayLink() *PayLink {
 	var payLink PayLink
 	payLink.PublicKey = os.Getenv("PUBLIC_KEY")
-	payLink.SuccessUrl = "http://localhost:8080"
+	payLink.SuccessUrl = "http://nurshinov.ru"
 	payLink.BillId = uuid.New().String()
 	return &payLink
 }

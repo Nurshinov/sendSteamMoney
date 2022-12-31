@@ -19,12 +19,13 @@ func MakeConn() *sql.DB {
 	return db
 }
 
-func AddNewProduct(login string, amount string) string {
+func AddNewProduct(login string, amount string, operation string) string {
 	var InsertId int
-	err := MakeConn().QueryRow(`INSERT INTO transacts(login, amount)  
-		VALUES ($1,$2) RETURNING id`, login, amount).Scan(&InsertId)
+	err := MakeConn().QueryRow(`INSERT INTO transacts(login, amount,operation)  
+		VALUES ($1,$2, $3) RETURNING id`, login, amount, operation).Scan(&InsertId)
 	if err != nil {
 		log.Println("[ERROR] Неудачная запись в базу: " + err.Error())
 	}
-	return fmt.Sprintf("%.9b", InsertId)
+	log.Printf("[INFO] Добавлена новая запись в базу id:%d, steamLogin: %s", InsertId, login)
+	return fmt.Sprintf("%.14d", InsertId)
 }
