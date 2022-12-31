@@ -11,7 +11,7 @@ import (
 func MakeConn() *sql.DB {
 	connSettings := fmt.Sprintf("host=%s dbname=%s sslmode=disable user=%s password=%s", os.Getenv("DB_HOST"),
 		os.Getenv("DB_NAME"), os.Getenv("DB_USER"), os.Getenv("DB_PASS"))
-	db, err := sql.Open("user_data",
+	db, err := sql.Open("postgres",
 		connSettings)
 	if err != nil {
 		log.Fatal("[ERROR] Cannot connect ...\n" + err.Error())
