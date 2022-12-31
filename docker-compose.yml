@@ -5,6 +5,8 @@ services:
   tg_bot:
     image: alimzhannurshinov/qiwi_web:0.0.1
     container_name: qiwi_web
+    ports:
+      - "8080:8080"
     environment:
       PUBLIC_KEY: ${PUBLIC_KEY}
       SECRET_KEY: ${SECRET_KEY}
