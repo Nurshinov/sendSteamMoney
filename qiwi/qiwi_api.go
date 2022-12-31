@@ -47,7 +47,7 @@ type Currency struct {
 func CheckPaymentStatus(bill string, evT time.Time) *BillStatus {
 	var t BillStatus
 	client := http.Client{}
-	timeout := evT.Add(1 * time.Minute)
+	timeout := evT.Add(10 * time.Minute)
 	req, err := http.NewRequest("GET", "https://api.qiwi.com/partner/bill/v1/bills/"+bill, nil)
 	if err != nil {
 		log.Println("[ERROR] Ошибка проверки статуса платежа ID = " + bill + "\n" + err.Error())
