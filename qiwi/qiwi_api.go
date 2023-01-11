@@ -153,7 +153,7 @@ func SendMoneyToSteam(amount float64, id string, account string) {
 func GetPayLink() *PayLink {
 	var payLink PayLink
 	payLink.PublicKey = os.Getenv("PUBLIC_KEY")
-	payLink.SuccessUrl = "http://nurshinov.ru"
+	payLink.SuccessUrl = "https://nurshinov.ru"
 	payLink.BillId = uuid.New().String()
 	return &payLink
 }
