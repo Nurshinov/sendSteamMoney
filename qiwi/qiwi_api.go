@@ -59,12 +59,12 @@ func CheckPaymentStatus(bill string, evT time.Time) *BillStatus {
 			log.Println(err.Error())
 		}
 		err = json.NewDecoder(resp.Body).Decode(&t)
-		log.Printf("[INFO] Платеж %s имеет статус %s", bill, t.Status.Value)
 		if t.Status.Value == "PAID" {
 			break
 		}
 		time.Sleep(10 * time.Second)
 	}
+	log.Printf("[INFO] Платеж %s имеет статус %s", bill, t.Status.Value)
 	return &t
 }
 

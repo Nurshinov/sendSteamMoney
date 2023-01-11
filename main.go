@@ -58,7 +58,7 @@ func checkPayments(bills chan string) {
 				transactId := database.AddNewProduct(status.Comment, status.Amount.Value, "Перевод между счетами")
 				floatSum, _ := strconv.ParseFloat(status.Amount.Value, 32)
 				amount := qiwi.GetCurrencySum(floatSum)
-				log.Printf("[INFO] Сумма перевода для billID: %s = %f", bills, amount)
+				log.Printf("[INFO] Сумма перевода для логина %s = %f", status.Comment, amount)
 				qiwi.P2P(amount, transactId)
 				time.Sleep(30 * time.Second)
 				transactId = database.AddNewProduct(status.Comment, status.Amount.Value, "Перевод денег на аккаунт в стиме")
