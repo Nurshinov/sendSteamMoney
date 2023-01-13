@@ -2,8 +2,13 @@
 version: '3'
 
 services:
-  tg_bot:
-    image: alimzhannurshinov/qiwi_web:0.0.1
+  frontend:
+    image: qiwi_frontend:latest
+    container_name: qiwi_web
+    ports:
+      - "8081:80"
+  backend:
+    image: alimzhannurshinov/qiwi_web:0.0.2
     container_name: qiwi_web
     ports:
       - "8080:8080"
