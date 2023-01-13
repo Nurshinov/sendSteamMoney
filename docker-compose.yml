@@ -3,7 +3,7 @@ version: '3'
 
 services:
   frontend:
-    image: qiwi_frontend:latest
+    image: alimzhannurshinov/qiwi_frontend:latest
     container_name: qiwi_web
     ports:
       - "8081:80"
